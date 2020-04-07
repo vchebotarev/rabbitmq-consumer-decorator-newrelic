@@ -1,0 +1,1 @@
+# rabbitmq-consumer-decorator-newrelic
