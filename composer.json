@@ -1,0 +1,30 @@
+{
+    "name": "chebur/rabbitmq-consumer-decorator-newrelic",
+    "type": "library",
+    "description": "RabbitMq New Relic consumer decorators",
+    "keywords": [
+        "rabbit",
+        "rabbitmq",
+        "newrelic",
+        "consumer"
+    ],
+    "homepage": "https://github.com/vchebotarev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vladimir Chebotarev",
+            "homepage": "http://github.com/vchebotarev",
+            "email": "v.yu.chebotarev@mail.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Chebur\\RabbitMqConsumerDecoratorNewRelic\\": "src"
+        }
+    },
+    "require": {
+        "php": "^7.1.3",
+        "ekino/newrelic-bundle": "^2.2",
+        "php-amqplib/rabbitmq-bundle": "^1.14"
+    }
+}
