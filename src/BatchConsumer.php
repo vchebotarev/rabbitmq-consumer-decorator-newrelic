@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Chebur\RabbitMqConsumerDecoratorNewRelic;
 
+use Ekino\NewRelicBundle\NewRelic\Config as NewRelicConfig;
 use Ekino\NewRelicBundle\NewRelic\NewRelicInteractorInterface;
 use OldSound\RabbitMqBundle\RabbitMq\BatchConsumerInterface;
+use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 
 class BatchConsumer implements BatchConsumerInterface
 {
@@ -17,12 +19,12 @@ class BatchConsumer implements BatchConsumerInterface
     /**
      * @var NewRelicInteractorInterface
      */
-    private $newRelic;
+    private $newRelicInteractor;
 
     /**
-     * @var string
+     * @var NewRelicConfig
      */
-    private $applicationName;
+    private $newRelicConfig;
 
     /**
      * @var string
@@ -30,23 +32,23 @@ class BatchConsumer implements BatchConsumerInterface
     private $transactionName;
 
     public function __construct(
-        BatchConsumerInterface $consumer,
-        NewRelicInteractorInterface $newRelic,
-        string $applicationName,
+        ConsumerInterface $consumer,
+        NewRelicInteractorInterface $newRelicInteractor,
+        NewRelicConfig $newRelicConfig,
         string $transactionName
     ) {
         $this->consumer = $consumer;
-        $this->newRelic = $newRelic;
-        $this->applicationName = $applicationName;
+        $this->newRelicInteractor = $newRelicInteractor;
+        $this->newRelicConfig = $newRelicConfig;
         $this->transactionName = $transactionName;
     }
 
     public function batchExecute(array $messages)
     {
-        $this->newRelic->startTransaction($this->applicationName);
-        $this->newRelic->setTransactionName($this->transactionName);
+        $this->newRelicInteractor->startTransaction($this->newRelicConfig->getName());
+        $this->newRelicInteractor->setTransactionName($this->transactionName);
         $result = $this->consumer->batchExecute($messages);
-        $this->newRelic->endTransaction();
+        $this->newRelicInteractor->endTransaction();
 
         return $result;
     }

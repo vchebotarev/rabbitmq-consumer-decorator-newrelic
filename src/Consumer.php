@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chebur\RabbitMqConsumerDecoratorNewRelic;
 
+use Ekino\NewRelicBundle\NewRelic\Config as NewRelicConfig;
 use Ekino\NewRelicBundle\NewRelic\NewRelicInteractorInterface;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -18,12 +19,12 @@ class Consumer implements ConsumerInterface
     /**
      * @var NewRelicInteractorInterface
      */
-    private $newRelic;
+    private $newRelicInteractor;
 
     /**
-     * @var string
+     * @var NewRelicConfig
      */
-    private $applicationName;
+    private $newRelicConfig;
 
     /**
      * @var string
@@ -32,22 +33,23 @@ class Consumer implements ConsumerInterface
 
     public function __construct(
         ConsumerInterface $consumer,
-        NewRelicInteractorInterface $newRelic,
-        string $applicationName,
+        NewRelicInteractorInterface $newRelicInteractor,
+        NewRelicConfig $newRelicConfig,
         string $transactionName
     ) {
         $this->consumer = $consumer;
-        $this->newRelic = $newRelic;
-        $this->applicationName = $applicationName;
+        $this->newRelicInteractor = $newRelicInteractor;
+        $this->newRelicConfig = $newRelicConfig;
         $this->transactionName = $transactionName;
     }
 
-    public function execute(AMQPMessage $msg)
+
+    public function execute(AMQPMessage $message)
     {
-        $this->newRelic->startTransaction($this->applicationName);
-        $this->newRelic->setTransactionName($this->transactionName);
-        $flag = $this->consumer->execute($msg);
-        $this->newRelic->endTransaction();
+        $this->newRelicInteractor->startTransaction($this->newRelicConfig->getName());
+        $this->newRelicInteractor->setTransactionName($this->transactionName);
+        $flag = $this->consumer->execute($message);
+        $this->newRelicInteractor->endTransaction();
 
         return $flag;
     }
