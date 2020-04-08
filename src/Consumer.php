@@ -43,7 +43,6 @@ class Consumer implements ConsumerInterface
         $this->transactionName = $transactionName;
     }
 
-
     public function execute(AMQPMessage $message)
     {
         $this->newRelicInteractor->startTransaction($this->newRelicConfig->getName());
