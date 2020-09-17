@@ -25,6 +25,6 @@
     "require": {
         "php": "^7.1.3",
         "ekino/newrelic-bundle": "^2.2",
-        "php-amqplib/rabbitmq-bundle": "^1.14"
+        "php-amqplib/rabbitmq-bundle": "^1.14|^2.2"
     }
 }
